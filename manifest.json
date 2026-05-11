@@ -1,0 +1,26 @@
+{
+    "name": "银龄记忆训练",
+    "short_name": "银龄记忆",
+    "description": "专为老年人设计的记忆力训练小游戏，包含数字记忆、卡片配对和词语记忆。",
+    "id": "silver-memory-train",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#FFF8F2",
+    "theme_color": "#E8915C",
+    "orientation": "portrait-primary",
+    "categories": ["education", "health", "games"],
+    "icons": [
+        {
+            "src": "icons/icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "icons/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any"
+        }
+    ]
+}

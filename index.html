@@ -1,0 +1,1564 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>银龄记忆训练 - 老年人记忆力训练</title>
+    
+    <!-- PWA 必备标签 -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#E8915C">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="银龄记忆">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+
+    <style>
+        :root {
+            --bg: #FFF8F2;
+            --card-bg: #FFFFFF;
+            --primary: #E8915C;
+            --primary-dark: #C97A3D;
+            --primary-light: #FFF0E6;
+            --success: #6BAF7B;
+            --success-light: #E8F5EB;
+            --error: #E07B6E;
+            --error-light: #FDF0EE;
+            --text: #3D2C1E;
+            --text-light: #6B5B4E;
+            --text-muted: #9B8B7E;
+            --border: #E8DDD2;
+            --shadow: 0 4px 16px rgba(60, 30, 10, 0.08);
+            --shadow-lg: 0 8px 32px rgba(60, 30, 10, 0.12);
+            --radius: 20px;
+            --radius-sm: 14px;
+            --radius-xs: 10px;
+            --font-xl: 28px;
+            --font-lg: 22px;
+            --font-md: 18px;
+            --font-sm: 15px;
+            --transition: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", "Noto Sans SC", sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-user-select: none;
+            user-select: none;
+            background-image:
+                radial-gradient(ellipse at 20% 20%, rgba(232, 145, 92, 0.06) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 70%, rgba(107, 175, 123, 0.05) 0%, transparent 60%),
+                radial-gradient(ellipse at 50% 50%, rgba(180, 150, 120, 0.03) 0%, transparent 70%);
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 520px;
+            background: var(--card-bg);
+            border-radius: 28px;
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            position: relative;
+            min-height: 620px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .app-header {
+            background: linear-gradient(135deg, #FDF6EF 0%, #FFF2E8 100%);
+            padding: 22px 28px 18px;
+            text-align: center;
+            border-bottom: 2px solid var(--border);
+            position: relative;
+        }
+        .app-header .logo-icon {
+            font-size: 42px;
+            display: block;
+            margin-bottom: 6px;
+            animation: gentleBounce 3s ease-in-out infinite;
+        }
+        @keyframes gentleBounce {
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-8px);
+            }
+            60% {
+                transform: translateY(-3px);
+            }
+        }
+        .app-header h1 {
+            font-size: 30px;
+            font-weight: 700;
+            color: #5D3A1F;
+            letter-spacing: 2px;
+            margin: 0;
+        }
+        .app-header .subtitle {
+            font-size: var(--font-sm);
+            color: var(--text-muted);
+            margin-top: 2px;
+            letter-spacing: 1px;
+        }
+        .back-btn {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--card-bg);
+            border: 2px solid var(--border);
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            color: var(--text);
+            z-index: 5;
+        }
+        .back-btn:hover {
+            background: var(--primary-light);
+            border-color: var(--primary);
+        }
+        .back-btn:active {
+            transform: translateY(-50%) scale(0.93);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 24px 22px 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            overflow-y: auto;
+        }
+
+        /* Cards on Home */
+        .training-card {
+            background: var(--card-bg);
+            border: 2.5px solid var(--border);
+            border-radius: var(--radius);
+            padding: 22px 20px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+        }
+        .training-card:hover {
+            border-color: var(--primary);
+            box-shadow: var(--shadow);
+            transform: translateY(-2px);
+        }
+        .training-card:active {
+            transform: scale(0.97);
+            transition: 0.15s;
+        }
+        .training-card .card-icon {
+            font-size: 48px;
+            flex-shrink: 0;
+            width: 64px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--primary-light);
+            border-radius: 18px;
+        }
+        .training-card .card-info h3 {
+            font-size: var(--font-lg);
+            color: var(--text);
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+        .training-card .card-info p {
+            font-size: var(--font-sm);
+            color: var(--text-light);
+            line-height: 1.5;
+            margin: 0;
+        }
+        .training-card .arrow {
+            position: absolute;
+            right: 18px;
+            font-size: 28px;
+            color: var(--text-muted);
+            transition: var(--transition);
+        }
+        .training-card:hover .arrow {
+            color: var(--primary);
+            right: 14px;
+        }
+
+        /* Section Titles */
+        .section-title {
+            font-size: var(--font-xl);
+            font-weight: 700;
+            color: var(--text);
+            text-align: center;
+            margin-bottom: 4px;
+            letter-spacing: 1px;
+        }
+        .section-desc {
+            font-size: var(--font-md);
+            color: var(--text-light);
+            text-align: center;
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 16px 32px;
+            font-size: var(--font-lg);
+            font-weight: 600;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            letter-spacing: 1px;
+            font-family: inherit;
+            min-height: 56px;
+            white-space: nowrap;
+        }
+        .btn:active {
+            transform: scale(0.94);
+            transition: 0.15s;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: #fff;
+            box-shadow: 0 4px 14px rgba(232, 145, 92, 0.35);
+        }
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            box-shadow: 0 6px 20px rgba(232, 145, 92, 0.45);
+            transform: translateY(-2px);
+        }
+        .btn-secondary {
+            background: var(--card-bg);
+            color: var(--text);
+            border: 2.5px solid var(--border);
+        }
+        .btn-secondary:hover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+        .btn-success {
+            background: var(--success);
+            color: #fff;
+            box-shadow: 0 4px 14px rgba(107, 175, 123, 0.35);
+        }
+        .btn-lg {
+            padding: 18px 40px;
+            font-size: 24px;
+            min-height: 62px;
+            border-radius: 56px;
+        }
+        .btn-block {
+            width: 100%;
+            justify-content: center;
+        }
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        /* Difficulty Selector */
+        .difficulty-selector {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .diff-btn {
+            padding: 14px 22px;
+            font-size: var(--font-md);
+            font-weight: 600;
+            border-radius: 40px;
+            border: 2.5px solid var(--border);
+            background: var(--card-bg);
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--text);
+            font-family: inherit;
+            min-width: 80px;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+        .diff-btn:hover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+        .diff-btn.active {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+            box-shadow: 0 3px 10px rgba(232, 145, 92, 0.3);
+        }
+        .diff-btn:active {
+            transform: scale(0.93);
+        }
+        .diff-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 400;
+            opacity: 0.8;
+            margin-top: 2px;
+        }
+
+        /* Number Display */
+        .number-display {
+            font-size: 72px;
+            font-weight: 700;
+            color: #5D3A1F;
+            text-align: center;
+            letter-spacing: 8px;
+            padding: 24px;
+            background: #FFFAF5;
+            border-radius: var(--radius);
+            border: 2px dashed var(--border);
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            word-break: break-all;
+            line-height: 1.2;
+            transition: var(--transition);
+        }
+        .number-display.hidden-state {
+            letter-spacing: 16px;
+            color: #C5B8A8;
+            border-style: solid;
+            background: #F9F5EF;
+        }
+
+        /* Input */
+        .input-group {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .big-input {
+            font-size: 32px;
+            padding: 16px 20px;
+            border-radius: var(--radius-sm);
+            border: 3px solid var(--border);
+            text-align: center;
+            font-family: inherit;
+            width: 100%;
+            max-width: 320px;
+            letter-spacing: 6px;
+            transition: var(--transition);
+            background: #FFFAF5;
+            color: var(--text);
+            font-weight: 600;
+        }
+        .big-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 6px rgba(232, 145, 92, 0.1);
+            background: #fff;
+        }
+        .big-input.correct {
+            border-color: var(--success);
+            background: var(--success-light);
+            animation: pulseGreen 0.6s ease-out;
+        }
+        .big-input.wrong {
+            border-color: var(--error);
+            background: var(--error-light);
+            animation: shake 0.5s ease-out;
+        }
+        @keyframes pulseGreen {
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(107, 175, 123, 0.4);
+            }
+            50% {
+                box-shadow: 0 0 0 20px rgba(107, 175, 123, 0);
+            }
+        }
+        @keyframes shake {
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+            20% {
+                transform: translateX(-8px);
+            }
+            40% {
+                transform: translateX(8px);
+            }
+            60% {
+                transform: translateX(-5px);
+            }
+            80% {
+                transform: translateX(5px);
+            }
+        }
+
+        /* Card Grid for Memory Match */
+        .card-grid {
+            display: grid;
+            gap: 10px;
+            justify-content: center;
+            margin: 0 auto;
+            width: 100%;
+            max-width: 420px;
+        }
+        .card-grid.cols-3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+        .card-grid.cols-4 {
+            grid-template-columns: repeat(4, 1fr);
+        }
+        .memory-card {
+            aspect-ratio: 1 / 1;
+            perspective: 800px;
+            cursor: pointer;
+            min-width: 60px;
+            min-height: 60px;
+        }
+        .memory-card .card-inner {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+            border-radius: var(--radius-xs);
+        }
+        .memory-card.flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+        .memory-card.matched .card-inner {
+            transform: rotateY(180deg);
+            box-shadow: 0 0 0 4px var(--success), 0 0 18px rgba(107, 175, 123, 0.5);
+            border-radius: var(--radius-xs);
+            transition: box-shadow 0.5s ease-out;
+        }
+        .memory-card .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            border-radius: var(--radius-xs);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 42px;
+            transition: var(--transition);
+            border: 3px solid var(--border);
+        }
+        .card-front {
+            background: linear-gradient(145deg, #FFF9F3, #FFF2E6);
+            color: var(--primary);
+            font-size: 36px;
+            z-index: 1;
+        }
+        .card-front::after {
+            content: '?';
+            font-size: 40px;
+            font-weight: 700;
+            color: #D4B896;
+        }
+        .card-back {
+            background: #FFFFFF;
+            transform: rotateY(180deg);
+            font-size: 44px;
+            border-color: #E0D5C5;
+        }
+        .memory-card.matched .card-back {
+            background: #F5FDF6;
+            border-color: var(--success);
+        }
+        .memory-card.wrong-flash .card-inner {
+            animation: wrongShake 0.5s ease-out;
+        }
+        @keyframes wrongShake {
+            0%,
+            100% {
+                transform: rotateY(180deg) translateX(0);
+            }
+            25% {
+                transform: rotateY(180deg) translateX(-6px);
+            }
+            50% {
+                transform: rotateY(180deg) translateX(6px);
+            }
+            75% {
+                transform: rotateY(180deg) translateX(-3px);
+            }
+        }
+
+        /* Word Grid */
+        .word-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+        }
+        .word-chip {
+            padding: 14px 22px;
+            font-size: var(--font-lg);
+            font-weight: 600;
+            border-radius: 40px;
+            border: 3px solid var(--border);
+            background: #FFFAF5;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: inherit;
+            color: var(--text);
+            letter-spacing: 1px;
+            min-width: 70px;
+            text-align: center;
+        }
+        .word-chip:hover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+        .word-chip:active {
+            transform: scale(0.93);
+        }
+        .word-chip.selected {
+            background: #FFF0E6;
+            border-color: var(--primary);
+            color: #C97A3D;
+            box-shadow: 0 2px 10px rgba(232, 145, 92, 0.25);
+        }
+        .word-chip.correct-reveal {
+            background: var(--success-light);
+            border-color: var(--success);
+            color: #3D7248;
+            animation: pulseGreen 0.8s ease-out;
+        }
+        .word-chip.wrong-reveal {
+            background: var(--error-light);
+            border-color: var(--error);
+            color: #A04040;
+        }
+        .word-chip.missed-reveal {
+            background: #FFFDE8;
+            border-color: #D4C840;
+            color: #7A6E20;
+        }
+
+        /* Timer */
+        .timer-bar {
+            width: 100%;
+            height: 8px;
+            background: #EDE5DA;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+        .timer-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), #F0B078);
+            border-radius: 10px;
+            transition: width 0.3s linear;
+            width: 100%;
+        }
+        .timer-bar-fill.warning {
+            background: linear-gradient(90deg, #E8A040, #E07050);
+        }
+        .timer-bar-fill.danger {
+            background: linear-gradient(90deg, #E06050, #D04040);
+        }
+        .timer-text {
+            text-align: center;
+            font-size: var(--font-md);
+            color: var(--text-light);
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+        /* Result overlay */
+        .result-banner {
+            text-align: center;
+            padding: 20px;
+            border-radius: var(--radius);
+            animation: fadeInUp 0.5s ease-out;
+        }
+        .result-banner.success {
+            background: var(--success-light);
+            border: 2px solid var(--success);
+        }
+        .result-banner.partial {
+            background: #FFFDE8;
+            border: 2px solid #D4C840;
+        }
+        .result-banner .result-icon {
+            font-size: 56px;
+            display: block;
+            margin-bottom: 8px;
+        }
+        .result-banner .result-text {
+            font-size: var(--font-xl);
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        .result-banner .result-detail {
+            font-size: var(--font-md);
+            color: var(--text-light);
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Score stars */
+        .stars-row {
+            font-size: 40px;
+            letter-spacing: 6px;
+            text-align: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 420px) {
+            .app-container {
+                border-radius: 20px;
+                min-height: auto;
+            }
+            .app-header {
+                padding: 16px 20px 14px;
+            }
+            .app-header h1 {
+                font-size: 24px;
+            }
+            .main-content {
+                padding: 16px 12px 20px;
+                gap: 14px;
+            }
+            .number-display {
+                font-size: 48px;
+                letter-spacing: 4px;
+                padding: 18px;
+                min-height: 90px;
+            }
+            .big-input {
+                font-size: 26px;
+                padding: 14px 16px;
+                letter-spacing: 4px;
+                max-width: 260px;
+            }
+            .btn {
+                padding: 14px 24px;
+                font-size: var(--font-md);
+                min-height: 50px;
+            }
+            .btn-lg {
+                padding: 16px 30px;
+                font-size: 20px;
+                min-height: 54px;
+            }
+            .memory-card .card-face {
+                font-size: 30px;
+                border-width: 2px;
+            }
+            .card-front::after {
+                font-size: 28px;
+            }
+            .card-back {
+                font-size: 32px;
+            }
+            .card-grid {
+                gap: 7px;
+                max-width: 340px;
+            }
+            .word-chip {
+                padding: 10px 16px;
+                font-size: var(--font-md);
+                border-width: 2px;
+            }
+            .training-card {
+                padding: 16px 14px;
+                gap: 12px;
+            }
+            .training-card .card-icon {
+                font-size: 36px;
+                width: 50px;
+                height: 50px;
+                border-radius: 14px;
+            }
+            .training-card .card-info h3 {
+                font-size: var(--font-md);
+            }
+            .diff-btn {
+                padding: 10px 16px;
+                font-size: var(--font-sm);
+            }
+        }
+        @media (min-width: 421px) and (max-width: 520px) {
+            .card-grid.cols-4 {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 8px;
+                max-width: 380px;
+            }
+            .memory-card .card-face {
+                font-size: 34px;
+            }
+            .card-back {
+                font-size: 36px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container" id="appContainer">
+        <!-- Header -->
+        <header class="app-header" id="appHeader">
+            <button class="back-btn" id="backBtn" title="返回首页" style="display:none;">←</button>
+            <span class="logo-icon">🧠</span>
+            <h1>银龄记忆训练</h1>
+            <p class="subtitle">每天练一练，大脑更灵活</p>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content" id="mainContent">
+            <!-- Home Screen -->
+            <div id="screen-home">
+                <p class="section-desc" style="font-size:20px;">请选择一项训练开始吧 👇</p>
+                <div class="training-card" data-screen="number-memory">
+                    <div class="card-icon">🔢</div>
+                    <div class="card-info">
+                        <h3>数字记忆</h3>
+                        <p>记住出现的数字，然后凭记忆输入</p>
+                    </div>
+                    <span class="arrow">›</span>
+                </div>
+                <div class="training-card" data-screen="card-match">
+                    <div class="card-icon">🃏</div>
+                    <div class="card-info">
+                        <h3>卡片配对</h3>
+                        <p>翻开卡片，找到相同的图案配对</p>
+                    </div>
+                    <span class="arrow">›</span>
+                </div>
+                <div class="training-card" data-screen="word-memory">
+                    <div class="card-icon">📝</div>
+                    <div class="card-info">
+                        <h3>词语记忆</h3>
+                        <p>记住显示的词语，然后识别出来</p>
+                    </div>
+                    <span class="arrow">›</span>
+                </div>
+            </div>
+
+            <!-- Number Memory Screen -->
+            <div id="screen-number-memory" style="display:none;">
+                <h2 class="section-title">🔢 数字记忆</h2>
+                <p class="section-desc" id="numRoundInfo">记住下面的数字，它将在几秒后消失</p>
+                <div class="difficulty-selector" id="numDiffSelector">
+                    <button class="diff-btn active" data-diff="easy">简单<span class="diff-label">3~4位</span></button>
+                    <button class="diff-btn" data-diff="medium">中等<span class="diff-label">5~6位</span></button>
+                    <button class="diff-btn" data-diff="hard">困难<span class="diff-label">7~8位</span></button>
+                </div>
+                <div class="timer-bar"><div class="timer-bar-fill" id="numTimerBar"></div></div>
+                <p class="timer-text" id="numTimerText">记忆时间：8秒</p>
+                <div class="number-display" id="numDisplay">---</div>
+                <div class="input-group" id="numInputGroup" style="display:none;">
+                    <input type="text" class="big-input" id="numInput" placeholder="输入数字" inputmode="numeric" autocomplete="off">
+                    <button class="btn btn-primary" id="numSubmitBtn">确认</button>
+                </div>
+                <div id="numResultArea"></div>
+                <button class="btn btn-primary btn-block btn-lg" id="numStartBtn">开始记忆</button>
+                <button class="btn btn-secondary btn-block" id="numRetryBtn" style="display:none;">再来一轮</button>
+            </div>
+
+            <!-- Card Match Screen -->
+            <div id="screen-card-match" style="display:none;">
+                <h2 class="section-title">🃏 卡片配对</h2>
+                <p class="section-desc">翻开卡片找到相同的图案</p>
+                <div class="difficulty-selector" id="cardDiffSelector">
+                    <button class="diff-btn active" data-diff="easy">简单<span class="diff-label">4对</span></button>
+                    <button class="diff-btn" data-diff="medium">中等<span class="diff-label">6对</span></button>
+                    <button class="diff-btn" data-diff="hard">困难<span class="diff-label">8对</span></button>
+                </div>
+                <p style="text-align:center;font-size:var(--font-md);color:var(--text-light);" id="cardStepInfo">
+                    步数：<strong>0</strong> 步 | 已配对：<strong>0</strong> 对
+                </p>
+                <div class="card-grid cols-4" id="cardGrid"></div>
+                <div id="cardResultArea"></div>
+                <button class="btn btn-primary btn-block btn-lg" id="cardRestartBtn">🔄 重新开始</button>
+            </div>
+
+            <!-- Word Memory Screen -->
+            <div id="screen-word-memory" style="display:none;">
+                <h2 class="section-title">📝 词语记忆</h2>
+                <p class="section-desc" id="wordPhaseInfo">请记住下面这些词语，它们将在几秒后消失</p>
+                <div class="difficulty-selector" id="wordDiffSelector">
+                    <button class="diff-btn active" data-diff="easy">简单<span class="diff-label">4个词</span></button>
+                    <button class="diff-btn" data-diff="medium">中等<span class="diff-label">5个词</span></button>
+                    <button class="diff-btn" data-diff="hard">困难<span class="diff-label">6个词</span></button>
+                </div>
+                <div class="timer-bar"><div class="timer-bar-fill" id="wordTimerBar"></div></div>
+                <p class="timer-text" id="wordTimerText">记忆时间：10秒</p>
+                <div class="word-grid" id="wordDisplayGrid"></div>
+                <div id="wordSelectArea" style="display:none;">
+                    <p class="section-desc" style="margin-top:12px;">请点击选择你记得的词语（可多选）</p>
+                    <div class="word-grid" id="wordSelectGrid"></div>
+                    <button class="btn btn-primary btn-block btn-lg" id="wordSubmitBtn" style="margin-top:14px;">提交答案</button>
+                </div>
+                <div id="wordResultArea"></div>
+                <button class="btn btn-primary btn-block btn-lg" id="wordStartBtn">开始记忆</button>
+                <button class="btn btn-secondary btn-block" id="wordRetryBtn" style="display:none;">再来一轮</button>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        (function() {
+            // ==================== DOM Elements ====================
+            const appContainer = document.getElementById('appContainer');
+            const mainContent = document.getElementById('mainContent');
+            const backBtn = document.getElementById('backBtn');
+            const screenHome = document.getElementById('screen-home');
+            const screenNumberMemory = document.getElementById('screen-number-memory');
+            const screenCardMatch = document.getElementById('screen-card-match');
+            const screenWordMemory = document.getElementById('screen-word-memory');
+            const allScreens = [screenHome, screenNumberMemory, screenCardMatch, screenWordMemory];
+
+            // ==================== Audio Feedback ====================
+            let audioCtx = null;
+
+            function getAudioCtx() {
+                if (!audioCtx) {
+                    try {
+                        audioCtx = new(window.AudioContext || window.webkitAudioContext)();
+                    } catch (e) {
+                        audioCtx = null;
+                    }
+                }
+                if (audioCtx && audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+                return audioCtx;
+            }
+
+            function playTone(freq, duration, type = 'sine', vol = 0.15) {
+                const ctx = getAudioCtx();
+                if (!ctx) return;
+                try {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = type;
+                    osc.frequency.setValueAtTime(freq, ctx.currentTime);
+                    gain.gain.setValueAtTime(vol, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start(ctx.currentTime);
+                    osc.stop(ctx.currentTime + duration);
+                } catch (e) {
+                    // silent fail
+                }
+            }
+
+            function sfxClick() { playTone(800, 0.1, 'sine', 0.08); }
+
+            function sfxCorrect() { playTone(660, 0.15, 'sine', 0.12);
+                setTimeout(() => playTone(880, 0.2, 'sine', 0.14), 150); }
+
+            function sfxWrong() { playTone(200, 0.3, 'triangle', 0.1); }
+
+            function sfxFlip() { playTone(500, 0.08, 'sine', 0.06); }
+
+            function sfxMatch() { playTone(520, 0.12, 'sine', 0.1);
+                setTimeout(() => playTone(780, 0.18, 'sine', 0.13), 120);
+                setTimeout(() => playTone(1040, 0.22, 'sine', 0.11), 240); }
+
+            function sfxComplete() {
+                playTone(440, 0.15, 'sine', 0.1);
+                setTimeout(() => playTone(554, 0.15, 'sine', 0.1), 150);
+                setTimeout(() => playTone(660, 0.15, 'sine', 0.1), 300);
+                setTimeout(() => playTone(880, 0.3, 'sine', 0.14), 450);
+            }
+
+            // ==================== Screen Navigation ====================
+            let currentScreen = 'home';
+
+            function showScreen(screenName) {
+                allScreens.forEach(s => s.style.display = 'none');
+                switch (screenName) {
+                    case 'home':
+                        screenHome.style.display = 'block';
+                        backBtn.style.display = 'none';
+                        break;
+                    case 'number-memory':
+                        screenNumberMemory.style.display = 'block';
+                        backBtn.style.display = 'flex';
+                        resetNumberMemory();
+                        break;
+                    case 'card-match':
+                        screenCardMatch.style.display = 'block';
+                        backBtn.style.display = 'flex';
+                        initCardMatch();
+                        break;
+                    case 'word-memory':
+                        screenWordMemory.style.display = 'block';
+                        backBtn.style.display = 'flex';
+                        resetWordMemory();
+                        break;
+                }
+                currentScreen = screenName;
+                mainContent.scrollTop = 0;
+                sfxClick();
+            }
+
+            backBtn.addEventListener('click', () => {
+                cleanupAllTimers();
+                showScreen('home');
+            });
+
+            // Home screen card clicks
+            screenHome.querySelectorAll('.training-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const screen = card.dataset.screen;
+                    if (screen) showScreen(screen);
+                });
+            });
+
+            // ==================== Timer Management ====================
+            let allTimers = [];
+
+            function registerTimer(id) { allTimers.push(id); return id; }
+
+            function clearAllTimers() {
+                allTimers.forEach(id => clearTimeout(id));
+                allTimers = [];
+            }
+
+            function cleanupAllTimers() {
+                clearAllTimers();
+                if (numMemoryTimerInterval) clearInterval(numMemoryTimerInterval);
+                if (wordMemoryTimerInterval) clearInterval(wordMemoryTimerInterval);
+                numMemoryTimerInterval = null;
+                wordMemoryTimerInterval = null;
+                cardMatchLocked = false;
+                cardMatchFlippedCards = [];
+            }
+
+            // ==================== Number Memory ====================
+            let numDifficulty = 'easy';
+            let numCurrentNumber = '';
+            let numMemoryTimerInterval = null;
+            let numMemorySeconds = 8;
+            let numMemoryRemaining = 8;
+            let numRoundActive = false;
+
+            const numDiffConfig = {
+                easy: { minDigits: 3, maxDigits: 4, memoryTime: 8 },
+                medium: { minDigits: 5, maxDigits: 6, memoryTime: 7 },
+                hard: { minDigits: 7, maxDigits: 8, memoryTime: 6 },
+            };
+
+            function getNumConfig() { return numDiffConfig[numDifficulty]; }
+
+            function generateRandomNumber(minDigits, maxDigits) {
+                const digits = minDigits + Math.floor(Math.random() * (maxDigits - minDigits + 1));
+                let num = '';
+                for (let i = 0; i < digits; i++) {
+                    num += Math.floor(Math.random() * 10).toString();
+                }
+                return num;
+            }
+
+            function resetNumberMemory() {
+                cleanupAllTimers();
+                numRoundActive = false;
+                numCurrentNumber = '';
+                document.getElementById('numDisplay').textContent = '---';
+                document.getElementById('numDisplay').classList.remove('hidden-state');
+                document.getElementById('numInputGroup').style.display = 'none';
+                document.getElementById('numInput').value = '';
+                document.getElementById('numInput').classList.remove('correct', 'wrong');
+                document.getElementById('numResultArea').innerHTML = '';
+                document.getElementById('numStartBtn').style.display = 'block';
+                document.getElementById('numRetryBtn').style.display = 'none';
+                document.getElementById('numDiffSelector').style.display = 'flex';
+                document.getElementById('numTimerBar').style.width = '100%';
+                document.getElementById('numTimerBar').classList.remove('warning', 'danger');
+                document.getElementById('numTimerText').textContent = '记忆时间：' + getNumConfig().memoryTime + '秒';
+                document.getElementById('numRoundInfo').textContent = '记住下面的数字，它将在几秒后消失';
+                document.getElementById('numStartBtn').disabled = false;
+            }
+
+            function startNumberMemory() {
+                if (numRoundActive) return;
+                cleanupAllTimers();
+                numRoundActive = true;
+                const config = getNumConfig();
+                numCurrentNumber = generateRandomNumber(config.minDigits, config.maxDigits);
+                numMemorySeconds = config.memoryTime;
+                numMemoryRemaining = numMemorySeconds;
+
+                document.getElementById('numDisplay').textContent = numCurrentNumber;
+                document.getElementById('numDisplay').classList.remove('hidden-state');
+                document.getElementById('numInputGroup').style.display = 'none';
+                document.getElementById('numInput').value = '';
+                document.getElementById('numInput').classList.remove('correct', 'wrong');
+                document.getElementById('numResultArea').innerHTML = '';
+                document.getElementById('numStartBtn').style.display = 'none';
+                document.getElementById('numRetryBtn').style.display = 'none';
+                document.getElementById('numDiffSelector').style.display = 'none';
+                document.getElementById('numTimerBar').style.width = '100%';
+                document.getElementById('numTimerBar').classList.remove('warning', 'danger');
+                document.getElementById('numTimerText').textContent = '记忆时间：' + numMemoryRemaining + '秒';
+                document.getElementById('numRoundInfo').textContent = '请集中注意力记住下面的数字！';
+
+                const totalMs = numMemorySeconds * 1000;
+                const startTime = Date.now();
+                numMemoryTimerInterval = setInterval(() => {
+                    const elapsed = Date.now() - startTime;
+                    const remaining = Math.max(0, totalMs - elapsed);
+                    numMemoryRemaining = Math.ceil(remaining / 1000);
+                    const percent = (remaining / totalMs) * 100;
+                    document.getElementById('numTimerBar').style.width = percent + '%';
+                    document.getElementById('numTimerText').textContent = '记忆时间：' + numMemoryRemaining + '秒';
+
+                    if (percent < 35) document.getElementById('numTimerBar').classList.add('danger');
+                    else if (percent < 60) document.getElementById('numTimerBar').classList.add('warning');
+
+                    if (remaining <= 0) {
+                        clearInterval(numMemoryTimerInterval);
+                        numMemoryTimerInterval = null;
+                        hideNumberAndAsk();
+                    }
+                }, 200);
+            }
+
+            function hideNumberAndAsk() {
+                document.getElementById('numDisplay').textContent = '? ? ?';
+                document.getElementById('numDisplay').classList.add('hidden-state');
+                document.getElementById('numInputGroup').style.display = 'flex';
+                document.getElementById('numInput').focus();
+                document.getElementById('numTimerBar').style.width = '0%';
+                document.getElementById('numTimerBar').classList.add('danger');
+                document.getElementById('numTimerText').textContent = '时间到！请输入你记住的数字';
+                document.getElementById('numRoundInfo').textContent = '请输入你刚才看到的数字';
+                document.getElementById('numStartBtn').style.display = 'none';
+                numRoundActive = false;
+                sfxFlip();
+            }
+
+            function submitNumberAnswer() {
+                const inputEl = document.getElementById('numInput');
+                const userAnswer = inputEl.value.trim();
+                if (!userAnswer) {
+                    inputEl.focus();
+                    inputEl.classList.add('wrong');
+                    setTimeout(() => inputEl.classList.remove('wrong'), 600);
+                    return;
+                }
+                const isCorrect = userAnswer === numCurrentNumber;
+                const resultArea = document.getElementById('numResultArea');
+
+                if (isCorrect) {
+                    inputEl.classList.add('correct');
+                    sfxCorrect();
+                    const stars = numDifficulty === 'hard' ? '⭐⭐⭐' : numDifficulty === 'medium' ? '⭐⭐' : '⭐';
+                    resultArea.innerHTML = `
+                        <div class="result-banner success">
+                            <span class="result-icon">🎉</span>
+                            <div class="result-text">太棒了！完全正确！</div>
+                            <div class="result-detail">你记住了 ${numCurrentNumber.length} 位数字 ${stars}</div>
+                            <div class="stars-row" style="margin-top:8px;">${stars}</div>
+                        </div>`;
+                } else {
+                    inputEl.classList.add('wrong');
+                    sfxWrong();
+                    resultArea.innerHTML = `
+                        <div class="result-banner partial">
+                            <span class="result-icon">🤔</span>
+                            <div class="result-text">有点偏差，没关系！</div>
+                            <div class="result-detail">正确答案是：<strong style="font-size:28px;letter-spacing:4px;">${numCurrentNumber}</strong></div>
+                            <div class="result-detail">你输入的是：${userAnswer || '(空)'}</div>
+                        </div>`;
+                }
+
+                document.getElementById('numInputGroup').style.display = 'none';
+                document.getElementById('numStartBtn').style.display = 'none';
+                document.getElementById('numRetryBtn').style.display = 'block';
+                document.getElementById('numDiffSelector').style.display = 'flex';
+                document.getElementById('numDisplay').textContent = numCurrentNumber;
+                document.getElementById('numDisplay').classList.remove('hidden-state');
+                document.getElementById('numRoundInfo').textContent = isCorrect ? '记忆力真好！再来挑战吧' : '多加练习，会越来越好的！';
+                document.getElementById('numTimerText').textContent = '本轮结束';
+                document.getElementById('numTimerBar').style.width = '100%';
+                document.getElementById('numTimerBar').classList.remove('warning', 'danger');
+                numRoundActive = false;
+                if (numMemoryTimerInterval) clearInterval(numMemoryTimerInterval);
+                numMemoryTimerInterval = null;
+            }
+
+            document.getElementById('numStartBtn').addEventListener('click', startNumberMemory);
+            document.getElementById('numSubmitBtn').addEventListener('click', submitNumberAnswer);
+            document.getElementById('numRetryBtn').addEventListener('click', resetNumberMemory);
+            document.getElementById('numInput').addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') submitNumberAnswer();
+            });
+
+            document.querySelectorAll('#numDiffSelector .diff-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    if (numRoundActive) return;
+                    document.querySelectorAll('#numDiffSelector .diff-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    numDifficulty = this.dataset.diff;
+                    resetNumberMemory();
+                    sfxClick();
+                });
+            });
+
+            // ==================== Card Match Game ====================
+            let cardDifficulty = 'medium';
+            let cardPairs = 6;
+            let cardCols = 4;
+            let cardMatchLocked = false;
+            let cardMatchFlippedCards = [];
+            let cardMatchSteps = 0;
+            let cardMatchMatchedCount = 0;
+            let cardMatchTotalPairs = 6;
+            let cardMatchEmojis = [];
+
+            const cardEmojiPool = ['❤️', '🌟', '🌙', '☀️', '🏠', '🌸', '🍎', '🐦', '🐶', '🐱', '🦋', '🍀', '🎵', '🌻', '🍊', '🐟'];
+
+            const cardDiffConfig = {
+                easy: { pairs: 4, cols: 4 },
+                medium: { pairs: 6, cols: 4 },
+                hard: { pairs: 8, cols: 4 },
+            };
+
+            function getCardConfig() { return cardDiffConfig[cardDifficulty]; }
+
+            function shuffleArray(arr) {
+                const a = [...arr];
+                for (let i = a.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [a[i], a[j]] = [a[j], a[i]];
+                }
+                return a;
+            }
+
+            function initCardMatch() {
+                cleanupAllTimers();
+                cardMatchLocked = false;
+                cardMatchFlippedCards = [];
+                cardMatchSteps = 0;
+                cardMatchMatchedCount = 0;
+                const config = getCardConfig();
+                cardMatchTotalPairs = config.pairs;
+                cardPairs = config.pairs;
+                cardCols = config.cols;
+                cardMatchEmojis = shuffleArray(cardEmojiPool).slice(0, cardPairs);
+                const cardValues = shuffleArray([...cardMatchEmojis, ...cardMatchEmojis]);
+
+                document.getElementById('cardResultArea').innerHTML = '';
+                updateCardStepInfo();
+                document.getElementById('cardRestartBtn').style.display = 'block';
+
+                const grid = document.getElementById('cardGrid');
+                grid.className = 'card-grid cols-' + cardCols;
+                grid.innerHTML = '';
+
+                cardValues.forEach((emoji, index) => {
+                    const card = document.createElement('div');
+                    card.className = 'memory-card';
+                    card.dataset.index = index;
+                    card.dataset.emoji = emoji;
+                    card.innerHTML = `
+                        <div class="card-inner">
+                            <div class="card-face card-front"></div>
+                            <div class="card-face card-back">${emoji}</div>
+                        </div>`;
+                    card.addEventListener('click', () => onCardClick(card));
+                    grid.appendChild(card);
+                });
+
+                if (window.innerWidth <= 420 && cardPairs === 6) {
+                    grid.className = 'card-grid cols-3';
+                }
+                if (window.innerWidth <= 420 && cardPairs === 8) {
+                    grid.className = 'card-grid cols-4';
+                }
+            }
+
+            function updateCardStepInfo() {
+                document.getElementById('cardStepInfo').innerHTML =
+                    `步数：<strong>${cardMatchSteps}</strong> 步 | 已配对：<strong>${cardMatchMatchedCount}</strong> / ${cardMatchTotalPairs} 对`;
+            }
+
+            function onCardClick(card) {
+                if (cardMatchLocked) return;
+                if (card.classList.contains('flipped')) return;
+                if (card.classList.contains('matched')) return;
+                if (cardMatchFlippedCards.length >= 2) return;
+
+                card.classList.add('flipped');
+                cardMatchFlippedCards.push(card);
+                sfxFlip();
+
+                if (cardMatchFlippedCards.length === 2) {
+                    cardMatchSteps++;
+                    updateCardStepInfo();
+                    checkCardMatch();
+                }
+            }
+
+            function checkCardMatch() {
+                const [card1, card2] = cardMatchFlippedCards;
+                const match = card1.dataset.emoji === card2.dataset.emoji;
+
+                if (match) {
+                    cardMatchLocked = true;
+                    setTimeout(() => {
+                        card1.classList.add('matched');
+                        card2.classList.add('matched');
+                        cardMatchMatchedCount++;
+                        updateCardStepInfo();
+                        cardMatchFlippedCards = [];
+                        cardMatchLocked = false;
+                        sfxMatch();
+
+                        if (cardMatchMatchedCount >= cardMatchTotalPairs) {
+                            onCardMatchComplete();
+                        }
+                    }, 350);
+                } else {
+                    cardMatchLocked = true;
+                    setTimeout(() => {
+                        card1.classList.add('wrong-flash');
+                        card2.classList.add('wrong-flash');
+                        sfxWrong();
+                    }, 200);
+                    setTimeout(() => {
+                        card1.classList.remove('flipped', 'wrong-flash');
+                        card2.classList.remove('flipped', 'wrong-flash');
+                        cardMatchFlippedCards = [];
+                        cardMatchLocked = false;
+                    }, 1200);
+                }
+            }
+
+            function onCardMatchComplete() {
+                sfxComplete();
+                let stars = 1;
+                const optimalSteps = cardMatchTotalPairs;
+                const goodSteps = cardMatchTotalPairs * 2;
+                const fairSteps = cardMatchTotalPairs * 3;
+                if (cardMatchSteps <= goodSteps) stars = 3;
+                else if (cardMatchSteps <= fairSteps) stars = 2;
+                const starStr = '⭐'.repeat(stars) + '☆'.repeat(3 - stars);
+
+                document.getElementById('cardResultArea').innerHTML = `
+                    <div class="result-banner success">
+                        <span class="result-icon">🎊</span>
+                        <div class="result-text">全部配对成功！</div>
+                        <div class="result-detail">你用了 <strong>${cardMatchSteps}</strong> 步完成了 ${cardMatchTotalPairs} 对配对</div>
+                        <div class="stars-row" style="margin-top:8px;">${starStr}</div>
+                        <div class="result-detail" style="margin-top:4px;">${stars >= 3 ? '记忆力非常棒！' : stars >= 2 ? '做得不错！' : '继续加油哦！'}</div>
+                    </div>`;
+                document.getElementById('cardStepInfo').innerHTML = `🎉 完成！共 <strong>${cardMatchSteps}</strong> 步`;
+            }
+
+            document.getElementById('cardRestartBtn').addEventListener('click', () => {
+                cleanupAllTimers();
+                initCardMatch();
+                sfxClick();
+            });
+
+            document.querySelectorAll('#cardDiffSelector .diff-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    if (cardMatchLocked && cardMatchMatchedCount > 0 && cardMatchMatchedCount < cardMatchTotalPairs) return;
+                    document.querySelectorAll('#cardDiffSelector .diff-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    cardDifficulty = this.dataset.diff;
+                    cleanupAllTimers();
+                    initCardMatch();
+                    sfxClick();
+                });
+            });
+
+            window.addEventListener('resize', () => {
+                if (currentScreen === 'card-match') {
+                    const grid = document.getElementById('cardGrid');
+                    if (window.innerWidth <= 420 && cardPairs === 6) {
+                        grid.className = 'card-grid cols-3';
+                    } else if (window.innerWidth <= 420 && cardPairs === 8) {
+                        grid.className = 'card-grid cols-4';
+                    } else {
+                        grid.className = 'card-grid cols-' + cardCols;
+                    }
+                }
+            });
+
+            // ==================== Word Memory ====================
+            let wordDifficulty = 'easy';
+            let wordMemoryWords = [];
+            let wordAllOptions = [];
+            let wordSelectedIndices = new Set();
+            let wordMemoryTimerInterval = null;
+            let wordMemorySeconds = 10;
+            let wordMemoryRemaining = 10;
+            let wordPhaseActive = false;
+
+            const wordPool = [
+                '苹果', '香蕉', '橘子', '葡萄', '西瓜', '桃子', '草莓', '芒果',
+                '小猫', '小狗', '兔子', '小鸟', '金鱼', '熊猫', '大象', '老虎',
+                '茶杯', '眼镜', '报纸', '花朵', '电视', '沙发', '台灯', '时钟',
+                '太阳', '月亮', '星星', '白云', '彩虹', '雨伞', '风筝', '气球',
+                '书包', '铅笔', '书本', '钥匙', '手机', '帽子', '围巾', '手套',
+            ];
+
+            const wordDiffConfig = {
+                easy: { wordCount: 4, memoryTime: 10, optionExtra: 3 },
+                medium: { wordCount: 5, memoryTime: 9, optionExtra: 4 },
+                hard: { wordCount: 6, memoryTime: 8, optionExtra: 4 },
+            };
+
+            function getWordConfig() { return wordDiffConfig[wordDifficulty]; }
+
+            function resetWordMemory() {
+                cleanupAllTimers();
+                wordPhaseActive = false;
+                wordMemoryWords = [];
+                wordAllOptions = [];
+                wordSelectedIndices = new Set();
+                document.getElementById('wordDisplayGrid').innerHTML = '';
+                document.getElementById('wordSelectGrid').innerHTML = '';
+                document.getElementById('wordSelectArea').style.display = 'none';
+                document.getElementById('wordResultArea').innerHTML = '';
+                document.getElementById('wordStartBtn').style.display = 'block';
+                document.getElementById('wordRetryBtn').style.display = 'none';
+                document.getElementById('wordDiffSelector').style.display = 'flex';
+                document.getElementById('wordTimerBar').style.width = '100%';
+                document.getElementById('wordTimerBar').classList.remove('warning', 'danger');
+                document.getElementById('wordTimerText').textContent = '记忆时间：' + getWordConfig().memoryTime + '秒';
+                document.getElementById('wordPhaseInfo').textContent = '请记住下面这些词语，它们将在几秒后消失';
+                document.getElementById('wordStartBtn').disabled = false;
+            }
+
+            function startWordMemory() {
+                if (wordPhaseActive) return;
+                cleanupAllTimers();
+                wordPhaseActive = true;
+                const config = getWordConfig();
+                wordMemoryWords = shuffleArray(wordPool).slice(0, config.wordCount);
+                wordMemorySeconds = config.memoryTime;
+                wordMemoryRemaining = wordMemorySeconds;
+                wordSelectedIndices = new Set();
+
+                const remainingPool = wordPool.filter(w => !wordMemoryWords.includes(w));
+                const extras = shuffleArray(remainingPool).slice(0, config.optionExtra);
+                wordAllOptions = shuffleArray([...wordMemoryWords, ...extras]);
+
+                const displayGrid = document.getElementById('wordDisplayGrid');
+                displayGrid.innerHTML = wordMemoryWords.map(w =>
+                    `<span class="word-chip" style="pointer-events:none;">${w}</span>`
+                ).join('');
+
+                document.getElementById('wordSelectArea').style.display = 'none';
+                document.getElementById('wordResultArea').innerHTML = '';
+                document.getElementById('wordStartBtn').style.display = 'none';
+                document.getElementById('wordRetryBtn').style.display = 'none';
+                document.getElementById('wordDiffSelector').style.display = 'none';
+                document.getElementById('wordTimerBar').style.width = '100%';
+                document.getElementById('wordTimerBar').classList.remove('warning', 'danger');
+                document.getElementById('wordTimerText').textContent = '记忆时间：' + wordMemoryRemaining + '秒';
+                document.getElementById('wordPhaseInfo').textContent = '请集中注意力记住这些词语！';
+
+                const totalMs = wordMemorySeconds * 1000;
+                const startTime = Date.now();
+                wordMemoryTimerInterval = setInterval(() => {
+                    const elapsed = Date.now() - startTime;
+                    const remaining = Math.max(0, totalMs - elapsed);
+                    wordMemoryRemaining = Math.ceil(remaining / 1000);
+                    const percent = (remaining / totalMs) * 100;
+                    document.getElementById('wordTimerBar').style.width = percent + '%';
+                    document.getElementById('wordTimerText').textContent = '记忆时间：' + wordMemoryRemaining + '秒';
+                    if (percent < 35) document.getElementById('wordTimerBar').classList.add('danger');
+                    else if (percent < 60) document.getElementById('wordTimerBar').classList.add('warning');
+                    if (remaining <= 0) {
+                        clearInterval(wordMemoryTimerInterval);
+                        wordMemoryTimerInterval = null;
+                        showWordSelection();
+                    }
+                }, 200);
+            }
+
+            function showWordSelection() {
+                document.getElementById('wordDisplayGrid').innerHTML = '<p style="text-align:center;color:var(--text-muted);font-size:var(--font-lg);">词语已隐藏</p>';
+                document.getElementById('wordTimerBar').style.width = '0%';
+                document.getElementById('wordTimerBar').classList.add('danger');
+                document.getElementById('wordTimerText').textContent = '时间到！请选择你记得的词语';
+                document.getElementById('wordPhaseInfo').textContent = '请点击选择你记得的词语（可多选）';
+                wordPhaseActive = false;
+                sfxFlip();
+
+                const selectGrid = document.getElementById('wordSelectGrid');
+                selectGrid.innerHTML = wordAllOptions.map((w, i) =>
+                    `<span class="word-chip word-option" data-index="${i}" data-word="${w}">${w}</span>`
+                ).join('');
+                document.getElementById('wordSelectArea').style.display = 'block';
+                document.getElementById('wordStartBtn').style.display = 'none';
+
+                selectGrid.querySelectorAll('.word-option').forEach(chip => {
+                    chip.addEventListener('click', function() {
+                        const idx = parseInt(this.dataset.index);
+                        if (wordSelectedIndices.has(idx)) {
+                            wordSelectedIndices.delete(idx);
+                            this.classList.remove('selected');
+                        } else {
+                            wordSelectedIndices.add(idx);
+                            this.classList.add('selected');
+                        }
+                        sfxClick();
+                    });
+                });
+            }
+
+            function submitWordAnswer() {
+                if (wordSelectedIndices.size === 0) {
+                    const selectGrid = document.getElementById('wordSelectGrid');
+                    selectGrid.style.animation = 'shake 0.5s ease-out';
+                    setTimeout(() => selectGrid.style.animation = '', 500);
+                    return;
+                }
+                const selectedWords = new Set();
+                wordSelectedIndices.forEach(i => selectedWords.add(wordAllOptions[i]));
+                const correctSet = new Set(wordMemoryWords);
+                let correctCount = 0;
+                let wrongCount = 0;
+                const missedWords = [];
+
+                wordMemoryWords.forEach(w => {
+                    if (selectedWords.has(w)) correctCount++;
+                    else missedWords.push(w);
+                });
+                wordSelectedIndices.forEach(i => {
+                    if (!correctSet.has(wordAllOptions[i])) wrongCount++;
+                });
+
+                const selectGrid = document.getElementById('wordSelectGrid');
+                selectGrid.querySelectorAll('.word-option').forEach(chip => {
+                    const word = chip.dataset.word;
+                    const idx = parseInt(chip.dataset.index);
+                    chip.style.pointerEvents = 'none';
+                    if (correctSet.has(word) && wordSelectedIndices.has(idx)) {
+                        chip.classList.add('correct-reveal');
+                    } else if (correctSet.has(word) && !wordSelectedIndices.has(idx)) {
+                        chip.classList.add('missed-reveal');
+                    } else if (!correctSet.has(word) && wordSelectedIndices.has(idx)) {
+                        chip.classList.add('wrong-reveal');
+                    }
+                });
+
+                const totalCorrect = correctSet.size;
+                const accuracy = totalCorrect > 0 ? correctCount / totalCorrect : 0;
+                let stars = 1;
+                if (accuracy >= 1 && wrongCount === 0) stars = 3;
+                else if (accuracy >= 0.7 && wrongCount <= 1) stars = 2;
+                const starStr = '⭐'.repeat(stars) + '☆'.repeat(3 - stars);
+
+                if (accuracy >= 1 && wrongCount === 0) sfxComplete();
+                else if (accuracy >= 0.5) sfxCorrect();
+                else sfxWrong();
+
+                const resultArea = document.getElementById('wordResultArea');
+                resultArea.innerHTML = `
+                    <div class="result-banner ${accuracy >= 0.7 ? 'success' : 'partial'}">
+                        <span class="result-icon">${accuracy >= 1 && wrongCount === 0 ? '🏆' : accuracy >= 0.7 ? '👍' : '💪'}</span>
+                        <div class="result-text">你选对了 <strong>${correctCount}</strong> / ${totalCorrect} 个词语</div>
+                        <div class="stars-row" style="margin-top:8px;">${starStr}</div>
+                        ${missedWords.length > 0 ? `<div class="result-detail" style="margin-top:6px;">漏掉的词语：<strong>${missedWords.join('、')}</strong></div>` : ''}
+                        ${wrongCount > 0 ? `<div class="result-detail">多选了 ${wrongCount} 个不相关的词语</div>` : ''}
+                    </div>`;
+                document.getElementById('wordSelectArea').style.display = 'none';
+                document.getElementById('wordRetryBtn').style.display = 'block';
+                document.getElementById('wordDiffSelector').style.display = 'flex';
+                document.getElementById('wordPhaseInfo').textContent = accuracy >= 0.7 ? '记忆力不错！再来挑战吧' : '多加练习会更好！';
+                document.getElementById('wordTimerText').textContent = '本轮结束';
+                document.getElementById('wordTimerBar').style.width = '100%';
+                document.getElementById('wordTimerBar').classList.remove('warning', 'danger');
+            }
+
+            document.getElementById('wordStartBtn').addEventListener('click', startWordMemory);
+            document.getElementById('wordSubmitBtn').addEventListener('click', submitWordAnswer);
+            document.getElementById('wordRetryBtn').addEventListener('click', resetWordMemory);
+
+            document.querySelectorAll('#wordDiffSelector .diff-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    if (wordPhaseActive) return;
+                    document.querySelectorAll('#wordDiffSelector .diff-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    wordDifficulty = this.dataset.diff;
+                    resetWordMemory();
+                    sfxClick();
+                });
+            });
+
+            // ==================== Initialization ====================
+            function init() {
+                showScreen('home');
+                document.addEventListener('click', function initAudio() {
+                    getAudioCtx();
+                }, { once: true });
+                document.addEventListener('touchstart', function initAudioTouch() {
+                    getAudioCtx();
+                }, { once: true });
+            }
+
+            init();
+
+            console.log('🧠 银龄记忆训练 App 已就绪');
+        })();
+    </script>
+
+    <!-- 注册 Service Worker -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(reg => console.log('Service Worker 注册成功', reg.scope))
+                    .catch(err => console.log('Service Worker 注册失败', err));
+            });
+        }
+    </script>
+</body>
+</html>
